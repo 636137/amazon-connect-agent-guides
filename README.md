@@ -2,6 +2,40 @@
 
 Production-quality **Step-by-Step Guides** (Cards Views) for Amazon Connect agent desktops.
 
+## Repository Structure
+
+```
+├── README.md                      # This file
+├── skill/                         # 📦 Copilot Skill (copy to ~/.copilot/skills/)
+│   ├── SKILL.md                   # Skill definition
+│   ├── README.md                  # Skill documentation  
+│   ├── cards_view_builder.py      # Python helper functions
+│   └── reference_example.json     # Production example (5 IRS cards)
+│
+└── irs-agent-views/               # 🏛️ IRS Implementation Example
+    ├── SETUP_GUIDE.md             # Amazon Connect configuration
+    ├── irs_enhanced_cards.json    # Deployed cards JSON
+    └── *.json                     # Individual card definitions
+```
+
+## Install the Skill
+
+```bash
+# Copy skill to your Copilot skills folder
+cp -r skill ~/.copilot/skills/cards-view-generator
+```
+
+Then invoke:
+```
+Use the cards-view-generator skill to create an agent guide for [your use case]
+```
+
+## Live Demo
+
+| Instance | Phone | Agent Login |
+|----------|-------|-------------|
+| **Treasury Connect** | +1 833-289-6602 | [Agent Workspace](https://treasury-connect-prod.my.connect.aws/agent-app-v2) |
+
 ## Features
 
 - ✅ Rich HTML tables with styled headers and color-coded rows
@@ -11,34 +45,7 @@ Production-quality **Step-by-Step Guides** (Cards Views) for Amazon Connect agen
 - ✅ 4 action buttons per card
 - ✅ Emoji-enhanced headings
 
-## Live Demo
-
-| Instance | Phone | Agent Login |
-|----------|-------|-------------|
-| **Treasury Connect** | +1 833-289-6602 | [Agent Workspace](https://treasury-connect-prod.my.connect.aws/agent-app-v2) |
-
-## Files
-
-```
-├── README.md                    # This file
-├── SKILL.md                     # Copilot skill documentation
-├── cards_view_builder.py        # Python helper functions
-├── reference_example.json       # Production IRS Agent Guide (5 cards)
-└── irs-agent-views/
-    ├── SETUP_GUIDE.md           # Amazon Connect configuration
-    ├── irs_enhanced_cards.json  # Deployed cards JSON
-    └── *.json                   # Individual card definitions
-```
-
-## Quick Start
-
-### 1. Use the Skill
-
-```
-Use the cards-view-generator skill to create an agent guide for [your use case]
-```
-
-### 2. Deploy to Amazon Connect
+## Deploy to Amazon Connect
 
 ```json
 {
@@ -47,7 +54,7 @@ Use the cards-view-generator skill to create an agent guide for [your use case]
     "ViewResource": {
       "Id": "arn:aws:connect:us-east-1:aws:view/cards"
     },
-    "ViewData": { /* Generated JSON */ }
+    "ViewData": { /* Generated JSON from skill */ }
   }
 }
 ```
@@ -58,55 +65,32 @@ Use the cards-view-generator skill to create an agent guide for [your use case]
 
 ```json
 {
-  "Summary": {
-    "Id": "refund-status",
-    "Icon": "document",
-    "Heading": "💰 Refund Status Inquiry",
-    "Status": "HIGH VOLUME",
-    "Description": "Check refund status and timelines"
-  },
-  "Detail": {
-    "Heading": "Refund Status Procedures",
-    "Description": "Verify caller identity and check IDRS",
-    "Sections": [
-      {"TemplateString": "<h4>🔐 Auth</h4><ul><li>Full SSN</li></ul>"},
-      {"TemplateString": "<h4>📊 Table</h4><table>...</table>"},
-      {"TemplateString": "<h4>⚠️ Warning</h4><div style='background:#fff3cd;'>...</div>"},
-      {"TemplateString": "<h4>🔗 Links</h4><a href='...'>Resource</a>"}
-    ],
-    "Actions": ["Open IDRS", "Send Letter", "Escalate", "Transfer"]
-  }
+  "Heading": "Dashboard Title",
+  "CardsPerRow": "1",
+  "Cards": [
+    {
+      "Summary": {
+        "Id": "card-id",
+        "Icon": "document",
+        "Heading": "💰 Card Title",
+        "Status": "HIGH VOLUME",
+        "Description": "Brief description"
+      },
+      "Detail": {
+        "Heading": "Detail Title",
+        "Description": "Context description",
+        "Sections": [
+          {"TemplateString": "<h4>🔐 Section</h4><ul><li>Item</li></ul>"},
+          {"TemplateString": "<h4>📊 Table</h4><table>...</table>"},
+          {"TemplateString": "<h4>⚠️ Warning</h4><div style='background:#fff3cd;'>...</div>"},
+          {"TemplateString": "<h4>🔗 Links</h4><a href='...'>Link</a>"}
+        ],
+        "Actions": ["Action 1", "Action 2", "Action 3", "Action 4"]
+      }
+    }
+  ]
 }
 ```
-
-## HTML Templates
-
-### Styled Table
-```html
-<table style='width:100%; border-collapse:collapse;'>
-  <tr style='background:#f0f0f0;'><th style='padding:8px;'>Header</th></tr>
-  <tr style='background:#d4edda;'><td style='padding:8px;'>Success</td></tr>
-  <tr style='background:#f8d7da;'><td style='padding:8px;'>Warning</td></tr>
-</table>
-```
-
-### Warning Box
-```html
-<div style='background:#fff3cd; padding:10px; border-radius:5px;'>
-  <b>STOP if:</b><ul><li>Condition</li></ul>
-</div>
-```
-
-## Valid Icons
-
-| Icon | Emoji | Use For |
-|------|-------|---------|
-| `document` | 📄 | Forms, records |
-| `shield` | 🛡️ | Security, verification |
-| `wallet` | 💳 | Payments, financial |
-| `alert` | ⚠️ | Warnings, urgent |
-| `home` | 🏠 | Household |
-| `plus` | ➕ | Create new |
 
 ## Architecture
 
@@ -119,6 +103,17 @@ Use the cards-view-generator skill to create an agent guide for [your use case]
                                     ↓
                            📋 Cards appear in Agent Workspace
 ```
+
+## Valid Icons
+
+| Icon | Emoji | Use For |
+|------|-------|---------|
+| `document` | 📄 | Forms, records |
+| `shield` | 🛡️ | Security, verification |
+| `wallet` | 💳 | Payments, financial |
+| `alert` | ⚠️ | Warnings, urgent |
+| `home` | 🏠 | Household |
+| `plus` | ➕ | Create new |
 
 ## License
 

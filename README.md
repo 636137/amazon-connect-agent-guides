@@ -1,5 +1,17 @@
 # Amazon Connect Agent Guides
 
+## Repository Layout
+
+- `frontend/`
+- `backend/`
+- `infra/`
+
+## Local vs Deploy
+
+- Local: see `docs/how-to.md`
+- Deploy: n/a
+
+
 Production-quality **Step-by-Step Guides** (Cards Views) for Amazon Connect agent desktops.
 
 ## Repository Structure
